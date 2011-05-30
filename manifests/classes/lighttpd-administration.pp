@@ -24,9 +24,8 @@ class lighttpd::administration {
     ensure => present,
   }
 
-  common::concatfilepart {"lighttpd":
+  sudo::directive {"lighttpd":
     ensure  => present,
-    file    => "/etc/sudoers",
     content => template("lighttpd/lighttpd-sudoers.erb"),
     require => Group["lighttpd-admin"],
   }
