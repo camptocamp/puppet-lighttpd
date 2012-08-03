@@ -37,21 +37,13 @@ define lighttpd::vhost(
   $aliases=[]
   ) {
 
-  case $operatingsystem {
-    /Debian|Ubuntu/: {
-      $wwwroot = "/var/www"
-      $lighttpd_config_dir = "/etc/lighttpd"
-    }
+  $wwwroot = '/var/www'
+  $lighttpd_config_dir = '/etc/lighttpd'
 
-    default: { fail "No instruction for \$operatingsystem $operatingsystem"}
-  }
-
-  common::concatfilepart { "vhost-${name}.conf":
-    file    => "${lighttpd_config_dir}/conf-available/00-puppet-vhost.conf",
+  concat::fragment {"vhost-${name}.conf":
     ensure  => $ensure,
+    target  => "${lighttpd_config_dir}/conf-available/00-puppet-vhost.conf",
     content => "include \"vhosts/vhost-${name}.conf\"\n",
-    manage  => true,
-    #notify  => Exec["reload-lighttpd"],
   }
 
   case $ensure {

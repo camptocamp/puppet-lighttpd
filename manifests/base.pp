@@ -10,6 +10,8 @@ it's inherited by OS-dependent classes.
 */
 class lighttpd::base {
 
+  include concat::setup
+
   package {"lighttpd":
     ensure => present,
   }
@@ -33,8 +35,7 @@ class lighttpd::base {
     require => Package["lighttpd"],
   }
 
-  file {"/etc/lighttpd/conf-available/00-puppet-vhost.conf":
-    ensure  => present,
+  concat {"/etc/lighttpd/conf-available/00-puppet-vhost.conf":
     owner   => root,
     group   => root,
     mode    => 0644,
@@ -45,4 +46,5 @@ class lighttpd::base {
     ensure => present,
     require => File["/etc/lighttpd/conf-available/00-puppet-vhost.conf"],
   }
+
 }
