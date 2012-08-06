@@ -129,7 +129,6 @@ define lighttpd::vhost(
       exec {"remove ${wwwroot}/${name}":
         command => "rm -rf ${wwwroot}/${name}",
         onlyif  => ["test -d ${wwwroot}/${name}", "test -n ${wwwroot}", "test -n ${name}"],
-        require => Common::Concatfilepart["$name"],
       }
     }
 
