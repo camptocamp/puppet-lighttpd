@@ -22,6 +22,7 @@ class lighttpd::administration {
   
   group {"lighttpd-admin":
     ensure => present,
+    system => true,
   }
 
   sudo::directive {"lighttpd":
