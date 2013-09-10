@@ -4,30 +4,37 @@
 
 Create a new group, and add new rights to sudoers
 
-Variables:
-- *$sudo_lighttpd_admin_user*: can be either a group, a user, or a mix
-- *$sudo_lighttpd_admin_cmnd*: provide some other command for sudo
+=== Parameters
+- *$sudo_user*: can be either a group, a user, or a mix
 
-Requires:
-- Class["lighttpd"]
+=== Requires
+- Class['lighttpd']
 
-Example:
-node "foo.bar" {
-  $sudo_lighttpd_admin_user = "%mygroup, someuser"
-  include lighttpd
-  include lighttpd::administration
+=== Example
+
+    node 'foo.bar' {
+      include ::lighttpd
+      class {'::lighttpd::administration':
+        sudo_user => '%mygroup, someuser',
+      }
 
 */
-class lighttpd::administration {
-  
-  group {"lighttpd-admin":
+class lighttpd::administration (
+  $sudo_user = $sudo_lighttpd_admin_user,
+) {
+
+  group {'lighttpd-admin':
     ensure => present,
     system => true,
   }
 
-  sudo::directive {"lighttpd":
+  $sudo_group = '%lighttpd-admin'
+  $sudo_user_alias = flatten([$sudo_group, $sudo_user])
+  $sudo_cmnd = '/etc/init.d/lighttpd, /usr/sbin/lighttpd-angel, /bin/su www-data, /bin/su - www-data'
+
+  sudo::directive {'lighttpd':
     ensure  => present,
-    content => template("lighttpd/lighttpd-sudoers.erb"),
-    require => Group["lighttpd-admin"],
+    content => template('lighttpd/lighttpd-sudoers.erb'),
+    require => Group['lighttpd-admin'],
   }
 }
