@@ -10,8 +10,6 @@ it's inherited by OS-dependent classes.
 */
 class lighttpd::base {
 
-  include concat::setup
-
   package {"lighttpd":
     ensure => present,
   }
