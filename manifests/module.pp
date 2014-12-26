@@ -34,6 +34,6 @@ define lighttpd::module(
         path    => $::path,
       }
     }
-    default: { faile "unknown \$ensure ${ensure} for ${name}" }
+    default: { fail "unknown \$ensure ${ensure} for ${name}" }
   }
 }
