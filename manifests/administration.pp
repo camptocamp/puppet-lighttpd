@@ -1,24 +1,21 @@
-/*
-
-== Class: lighttpd::administration
-
-Create a new group, and add new rights to sudoers
-
-=== Parameters
-- *$sudo_user*: can be either a group, a user, or a mix
-
-=== Requires
-- Class['lighttpd']
-
-=== Example
-
-    node 'foo.bar' {
-      include ::lighttpd
-      class {'::lighttpd::administration':
-        sudo_user => '%mygroup, someuser',
-      }
-
-*/
+# == Class: lighttpd::administration
+#
+# Create a new group, and add new rights to sudoers
+#
+# === Parameters
+# - *$sudo_user*: can be either a group, a user, or a mix
+#
+# === Requires
+# - Class['lighttpd']
+#
+# === Example
+#
+#     node 'foo.bar' {
+#       include ::lighttpd
+#       class {'::lighttpd::administration':
+#         sudo_user => '%mygroup, someuser',
+#       }
+#
 class lighttpd::administration (
   $sudo_user = $sudo_lighttpd_admin_user,
 ) {

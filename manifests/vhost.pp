@@ -1,34 +1,31 @@
-/*
-
-== Definition: lighttpd::vhost
-
-Arguments:
-  *$ensure*: can be:
-                    present (creates vhost)
-                    absent  (removes all vhost datas)
-                    disabled (keeps data, bu disables it)
-  *$owner*:   vhost's owner (default www-data)
-  *$group*:   vhost's group (default root)
-  *$mode*:    vhost's mode (default 2570)
-  *$aliases*: vhost's aliases
-
-Example:
-node "foo.bar" {
-  include lighttpd
-
-  # ... other configurations
-
-  lighttpd::vhost {$fqdn:
-    ensure => present,
-    group  => "admin",
-  }
-
-  lighttpd::vhost {"bar.foo":
-    ensure => disabled,
-  }
-}
-
-*/
+# == Definition: lighttpd::vhost
+#
+# Arguments:
+#   *$ensure*: can be:
+#                     present (creates vhost)
+#                     absent  (removes all vhost datas)
+#                     disabled (keeps data, bu disables it)
+#   *$owner*:   vhost's owner (default www-data)
+#   *$group*:   vhost's group (default root)
+#   *$mode*:    vhost's mode (default 2570)
+#   *$aliases*: vhost's aliases
+#
+# Example:
+# node "foo.bar" {
+#   include lighttpd
+#
+#   # ... other configurations
+#
+#   lighttpd::vhost {$fqdn:
+#     ensure => present,
+#     group  => "admin",
+#   }
+#
+#   lighttpd::vhost {"bar.foo":
+#     ensure => disabled,
+#   }
+# }
+#
 define lighttpd::vhost(
   $ensure=present,
   $owner=www-data,
@@ -52,12 +49,12 @@ define lighttpd::vhost(
         ensure  => directory,
         owner   => root,
         group   => root,
-        mode    => 0755,
-        require => Package["lighttpd"],
+        mode    => '0755',
+        require => Package['lighttpd'],
       }
 
       file {"${wwwroot}/${name}/htdocs":
-        ensure => directory,
+        ensure  => directory,
         require => File["${wwwroot}/${name}"],
         owner   => $owner,
         group   => $group,
@@ -65,7 +62,7 @@ define lighttpd::vhost(
       }
 
       file {"${wwwroot}/${name}/conf":
-        ensure => directory,
+        ensure  => directory,
         require => File["${wwwroot}/${name}"],
         owner   => $owner,
         group   => $group,
@@ -81,7 +78,7 @@ define lighttpd::vhost(
       }
 
       file {"${wwwroot}/${name}/private":
-        ensure => directory,
+        ensure  => directory,
         require => File["${wwwroot}/${name}"],
         owner   => $owner,
         group   => $group,
@@ -89,11 +86,11 @@ define lighttpd::vhost(
       }
 
       file {"${wwwroot}/${name}/logs":
-        ensure => directory,
+        ensure  => directory,
         require => File["${wwwroot}/${name}"],
         owner   => $owner,
         group   => root,
-        mode    => 0755,
+        mode    => '0755',
       }
 
       file {"${wwwroot}/${name}/cgi-bin":
@@ -106,9 +103,9 @@ define lighttpd::vhost(
 
       file {"${lighttpd_config_dir}/vhosts/vhost-${name}.conf":
         ensure  => present,
-        owner   => "root",
-        mode    => 0644,
-        content => template("lighttpd/lighttpd-vhost.erb"),
+        owner   => 'root',
+        mode    => '0644',
+        content => template('lighttpd/lighttpd-vhost.erb'),
       }
 
       file { "${lighttpd_config_dir}/vhosts-config/${name}.conf":
@@ -117,7 +114,7 @@ define lighttpd::vhost(
         content => "# you can put any lighttpd option related to your http host in this file.\n",
         owner   => $owner,
         group   => $group,
-        mode    => 0664,
+        mode    => '0664',
       }
 
     }
@@ -129,6 +126,7 @@ define lighttpd::vhost(
       exec {"remove ${wwwroot}/${name}":
         command => "rm -rf ${wwwroot}/${name}",
         onlyif  => ["test -d ${wwwroot}/${name}", "test -n ${wwwroot}", "test -n ${name}"],
+        path    => $::path,
       }
     }
 
@@ -137,7 +135,7 @@ define lighttpd::vhost(
         ensure => absent,
       }
     }
-    default: { fail "Unknown \$ensure $ensure for $name"}
+    default: { fail "Unknown \$ensure ${ensure} for ${name}"}
   }
 
 }
