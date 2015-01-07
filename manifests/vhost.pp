@@ -44,7 +44,7 @@ define lighttpd::vhost(
   }
 
   case $ensure {
-    present: {
+    'present': {
       file {"${wwwroot}/${name}":
         ensure  => directory,
         owner   => root,
@@ -119,7 +119,7 @@ define lighttpd::vhost(
 
     }
 
-    absent: {
+    'absent': {
       file {"${lighttpd_config_dir}/vhosts/vhost-${name}.conf":
         ensure => absent,
       }
@@ -130,7 +130,7 @@ define lighttpd::vhost(
       }
     }
 
-    disabled: {
+    'disabled': {
       file {"${lighttpd_config_dir}/vhosts/vhost-${name}.conf":
         ensure => absent,
       }

@@ -16,7 +16,7 @@ define lighttpd::module(
 ) {
   
   case $ensure {
-    present: {
+    'present': {
       exec {"enable ${name}":
         command => "lighty-enable-mod ${name}",
         unless  => "lighty-enable-mod - | egrep 'Already enabled modules:.*${name}'",
@@ -25,7 +25,7 @@ define lighttpd::module(
         path    => $::path,
       }
     }
-    absent: {
+    'absent': {
       exec {"disble ${name}":
         command => "lighty-disable-mod ${name}",
         onlyif  => "lighty-disable-mod - | egrep 'Already enabled modules:.*${name}'",
