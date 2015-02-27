@@ -102,14 +102,14 @@ define lighttpd::vhost(
       }
 
       file {"${lighttpd_config_dir}/vhosts/vhost-${name}.conf":
-        ensure  => present,
+        ensure  => file,
         owner   => 'root',
         mode    => '0644',
         content => template('lighttpd/lighttpd-vhost.erb'),
       }
 
       file { "${lighttpd_config_dir}/vhosts-config/${name}.conf":
-        ensure  => present,
+        ensure  => file,
         replace => false,
         content => "# you can put any lighttpd option related to your http host in this file.\n",
         owner   => $owner,
