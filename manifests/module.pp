@@ -14,7 +14,6 @@
 define lighttpd::module(
   $ensure=present
 ) {
-  
   case $ensure {
     'present': {
       exec {"enable ${name}":
